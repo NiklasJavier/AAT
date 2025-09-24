@@ -42,3 +42,13 @@ jobs:
           if [ "$checked" -eq 0 ]; then
             echo "No playbooks found to validate."
           fi
+
+      - name: Test runner script
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./runner.sh help > /tmp/runner-help.txt
+          grep -q "Usage:" /tmp/runner-help.txt
+          ./runner.sh list > /tmp/runner-list.txt
+          grep -q "Verfügbare Playbooks" /tmp/runner-list.txt
+          ./runner.sh run site --syntax-check
