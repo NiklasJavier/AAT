@@ -87,10 +87,6 @@ append_vault_arguments() {
     _cmd_ref+=("--vault-id" "$ANSIBLE_VAULT_ID")
   elif [[ -n "${ANSIBLE_VAULT_PASSWORD_FILE:-}" ]]; then
     _cmd_ref+=("--vault-password-file" "$ANSIBLE_VAULT_PASSWORD_FILE")
-  elif [[ -f "$DEFAULT_VAULT_PASSWORD_FILE" ]]; then
-    _cmd_ref+=("--vault-password-file" "$DEFAULT_VAULT_PASSWORD_FILE")
-  elif [[ -f "$DEFAULT_VAULT_ID_FILE" ]]; then
-    _cmd_ref+=("--vault-id" "$DEFAULT_VAULT_ID_FILE")
   fi
 }
 
