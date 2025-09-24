@@ -1,0 +1,9 @@
+---
+- name: Beispiel-Test-Playbook
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Gib eine Beispielausgabe aus
+      ansible.builtin.debug:
+        msg: "Dies ist eine Beispiel-Textausgabe."
