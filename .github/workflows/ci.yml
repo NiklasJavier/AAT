@@ -42,3 +42,31 @@ jobs:
           if [ "$checked" -eq 0 ]; then
             echo "No playbooks found to validate."
           fi
+
+      - name: Test runner script
+        shell: bash
+        env:
+          ANSIBLE_VAULT_PASSWORD_FILE: /tmp/ci-vault-pass
+          ANSIBLE_INVENTORY: localhost,
+        run: |
+          set -euo pipefail
+          printf 'ci-test-password\n' > "$ANSIBLE_VAULT_PASSWORD_FILE"
+          ./runner.sh help > /tmp/runner-help.txt
+          grep -q "Usage:" /tmp/runner-help.txt
+          ./runner.sh list > /tmp/runner-list.txt
+          grep -q "Verfügbare Playbooks" /tmp/runner-list.txt
+
+          playbook_to_test=""
+          for candidate in playbooks/*.yml playbooks/*.yaml; do
+            [ -f "$candidate" ] || continue
+            if [ -s "$candidate" ]; then
+              playbook_to_test="$(basename "$candidate")"
+              break
+            fi
+          done
+
+          if [ -n "$playbook_to_test" ]; then
+            ./runner.sh run "$playbook_to_test" --syntax-check
+          else
+            echo "No non-empty playbooks found; skipping runner run command test."
+          fi
