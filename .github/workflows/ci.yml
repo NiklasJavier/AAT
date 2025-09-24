@@ -45,8 +45,11 @@ jobs:
 
       - name: Test runner script
         shell: bash
+        env:
+          ANSIBLE_VAULT_PASSWORD_FILE: /tmp/ci-vault-pass
         run: |
           set -euo pipefail
+          printf 'ci-test-password\n' > "$ANSIBLE_VAULT_PASSWORD_FILE"
           ./runner.sh help > /tmp/runner-help.txt
           grep -q "Usage:" /tmp/runner-help.txt
           ./runner.sh list > /tmp/runner-list.txt
